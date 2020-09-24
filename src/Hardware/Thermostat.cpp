@@ -9,34 +9,58 @@ Thermostat::Thermostat()
 	PT_INIT(&pt);
 }
 
-void Thermostat::setTarget(uint8_t value)
+void Thermostat::setTarget(float value)
 {
 	_target = constrain(value, 0, 60);
+	_integral = 0;
+	_lasterror = 0;
 }
 
-uint8_t Thermostat::getTarget()
+float Thermostat::getTarget()
 {
 	return _target;
 }
 
 PT_THREAD() Thermostat::run()
 {
+	static uint16_t ontime;
 	PT_BEGIN(&pt);
   
 	for(;;)
 	{
-		while (!hub.thermometer.isValid())
+		float actual = hub.thermometer.getTemperature();
+
+		if (!hub.thermometer.valid())
 		{
-			hub.heater.setHeat(0);
-			PT_YIELD(&pt);
+			hub.heater.setState(false);
+			hub.thermometer.request();
+			hub.buzzer.beep(20);
+			PT_SLEEP(&pt, Dt);
+			continue;
 		}
 
-		float actual = hub.thermometer.getValue();
+		hub.thermometer.request();
+
 		float error = _target - actual;
-		float action = 0.3 * error;
+
+		_integral = _integral + (error + _lasterror) / 2;
+		_integral = constrain(_integral, -10, +10);
+	
+		float action = Kp * error + Ki * _integral + Kd * (error - _lasterror);
+		_lasterror = error;
+
 		action = constrain(action, 0, 1);
-		hub.heater.setHeat(action * 100);
-		PT_SLEEP(&pt, 500); // for i/d
+		ontime = action * Dt;
+		if (ontime > 0)
+		{
+			hub.heater.setState(true);
+			PT_SLEEP(&pt, ontime);
+		}
+		if (ontime < Dt)
+		{
+			hub.heater.setState(false);
+			PT_SLEEP(&pt, Dt - ontime);
+		}
 	}
   
 	PT_END(&pt);

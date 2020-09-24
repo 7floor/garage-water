@@ -45,33 +45,33 @@ PT_THREAD() ActiveScene::run_t()
 	PT_BEGIN(&ptt);
   
 	hub.display.clear();
+	hub.display.point(2, true);
 	hub.encoder.reset();
-	hub.thermostat.setTarget(hub.thermometer.getValue());
+	hub.thermostat.setTarget((int)hub.thermometer.getTemperature());
 	isTarget = true;
 	tglast = millis();
 
 	for(;;)
 	{
-		if (!hub.thermometer.isValid())
+		if (!hub.thermometer.valid())
 		{
 			hub.display.displayByte(_E, _r, _r, _t);
-			PT_SLEEP(&ptt, 500);
+			PT_SLEEP(&ptt, 1000);
 			PT_EXIT(&ptt);
 		}
 
 		if (isTarget)
 		{
 			hub.display.brightness(7);
-		        hub.display.displayInt(hub.thermostat.getTarget());
+		        hub.display.displayInt(hub.thermostat.getTarget() * 10);
 		}
 		else
 		{
 			hub.display.brightness(2);
-		        hub.display.displayInt(hub.thermometer.getValue());
+		        hub.display.displayInt(hub.thermometer.getTemperature() * 10);
 		}
 
 		PT_YIELD(&ptt);
-		//PT_WAIT_UNTIL(&ptt, hub.encoder.anything() || isTarget && millis() - tglast > 2000);
 
 		if (hub.encoder.encoder())
 		{
@@ -82,6 +82,8 @@ PT_THREAD() ActiveScene::run_t()
 
 		if (hub.encoder.push())
 		{
+			hub.display.point(2, false);
+			hub.display.brightness(2);
 			PT_EXIT(&ptt);
 		}	
 

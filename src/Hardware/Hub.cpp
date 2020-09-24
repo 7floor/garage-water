@@ -16,11 +16,9 @@ void Hub::Init()
 
 PT_THREAD() Hub::run()
 {
-	PT_SCHEDULE(level.run());
-	PT_SCHEDULE(thermometer.run());
-	PT_SCHEDULE(buzzer.run());
-	PT_SCHEDULE(heater.run());
-	PT_SCHEDULE(thermostat.run());
+	PT_SCHEDULE(level.run()); // it does the MA constantly
+	PT_SCHEDULE(buzzer.run()); // it can beep asynchronously
+	PT_SCHEDULE(thermostat.run()); // it does PID
 }
 
 uint8_t attachPCINT(uint8_t pin) {
