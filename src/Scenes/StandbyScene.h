@@ -11,7 +11,7 @@ public:
 	PT_THREAD() run();
 	
 private:
-	pt pt;
+	struct pt pt;
 };
 
 extern StandbyScene standby_scene;

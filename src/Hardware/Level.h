@@ -19,7 +19,7 @@ public:
 	PT_THREAD() run();
 	
 private:
-	pt pt;
+	struct pt pt;
 	NewPing* _ping;
 	uint8_t _avgSteps;
 	uint16_t _levels[3];

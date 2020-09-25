@@ -1,4 +1,4 @@
-#include <protothreads.h>
+#include "src/protothreads/protothreads.h"
 #include "src/Hardware/Hub.h"
 #include "src/Scenes/StandbyScene.h"
 

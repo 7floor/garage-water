@@ -7,8 +7,8 @@ class ActiveScene {
 public:
 	ActiveScene();
 	
-	pt ptt;
-	pt pt;
+	struct pt ptt;
+	struct pt pt;
 	PT_THREAD() run();
 	
 private:

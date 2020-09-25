@@ -13,7 +13,7 @@ public:
 	PT_THREAD() run();
 	
 private:
-	pt pt;
+	struct pt pt;
 	uint8_t _pin;
 	uint8_t _ms;
 };

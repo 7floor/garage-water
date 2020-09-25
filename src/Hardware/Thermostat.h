@@ -16,7 +16,7 @@ public:
 	PT_THREAD() run();
 	
 private:
-	pt pt;
+	struct pt pt;
 	float _target;
 	float _integral;
 	float _lasterror;
