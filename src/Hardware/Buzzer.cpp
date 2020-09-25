@@ -11,10 +11,10 @@ Buzzer::Buzzer(uint8_t pin)
 	PT_INIT(&pt);
 }
 
-void Buzzer::beep(uint8_t ms = 100)
+void Buzzer::beep(uint8_t ms)
 {
 	_ms = ms;
-	PT_RESTART(&pt);
+	PT_INIT(&pt);
 }
 
 void Buzzer::on()
