@@ -43,13 +43,27 @@ PT_THREAD() Thermostat::run()
 
 		float error = _target - actual;
 
-		_integral = _integral + (error + _lasterror) / 2;
-		_integral = constrain(_integral, -100, +100);
-	
-		float action = Kp * error + Ki * _integral + Kd * (error - _lasterror);
+		// Proportional
+		float action = Kp * error;
+
+		// Differential
+		action = action + Kd * (error - _lasterror);
+
+		float intdelta = (error + _lasterror) / 2;
+		
+		// stop integration for saturated action
+		if (action > 1 && intdelta > 0) intdelta = 0;
+		if (action < 0 && intdelta < 0) intdelta = 0;
+
+		_integral = _integral + intdelta;
+		_integral = constrain(_integral, -1, +1); // constrain integral
+		action = action + Ki * _integral;
+
+		// constrain action
+		action = constrain(action, 0, 1);
+
 		_lasterror = error;
 
-		action = constrain(action, 0, 1);
 		ontime = action * Dt;
 		if (ontime > 0)
 		{

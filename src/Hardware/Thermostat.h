@@ -1,9 +1,9 @@
 #pragma once
 #include <Arduino.h>
 #include "../Protothreads/protothreads.h"
-#define Kp 0.5
-#define Ki 0.05
-#define Kd 0.3
+#define Kp 1.0 // 1C difference - full power; 0.5C difference - half power
+#define Ki 0.0
+#define Kd 0.0
 #define Dt 400
 
 class Thermostat {
