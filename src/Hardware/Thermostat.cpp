@@ -44,7 +44,7 @@ PT_THREAD() Thermostat::run()
 		float error = _target - actual;
 
 		_integral = _integral + (error + _lasterror) / 2;
-		_integral = constrain(_integral, -10, +10);
+		_integral = constrain(_integral, -100, +100);
 	
 		float action = Kp * error + Ki * _integral + Kd * (error - _lasterror);
 		_lasterror = error;

@@ -2,9 +2,9 @@
 #include <Arduino.h>
 #include "../Protothreads/protothreads.h"
 #define Kp 0.5
-#define Ki 0.03
+#define Ki 0.05
 #define Kd 0.3
-#define Dt 500
+#define Dt 400
 
 class Thermostat {
 public:

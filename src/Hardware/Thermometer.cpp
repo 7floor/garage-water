@@ -4,7 +4,7 @@
 Thermometer::Thermometer(uint8_t pin)
 {
 	_ds = new MicroDS18B20(pin);
-	_ds->setResolution(10);
+	_ds->setResolution(11);
 	_valid = false;
 	_requested = false;
 	_temperature = 0;
